@@ -1,5 +1,5 @@
-# Auto-Annotation-with-a-Camera. A tool for an easy dataset creation. 
-Just take images of the objects of interest and you'll get them automatically annotated with pixelwize maps. I mean small datasets but everything in your hands :) 
+# Auto-Annotation-with-a-Camera. A tool for an easy (pixelwize annotated) image dataset creation. 
+Just take images of the objects of interest and you'll get them automatically annotated with pixelwize maps. The tool employs "motion detection" principle to annotate images. The work is covered with MIT license.
 
 #How to use it:
 To create and automatically annotate datasets.
