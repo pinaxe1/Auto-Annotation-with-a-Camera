@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Apr  4 21:34:17 2019
-The work is derivative from: https://gist.github.com/cbednarski/8450931
-
-A tool for an easy (pixelwize annotated) image dataset creation. 
-Just take images of the objects of interest and you'll get them automatically annotated with pixelwize maps. 
-The tool employs "motion detection" principle to annotate images. 
-The work is covered with MIT license.
-@author: Pinaxe
-
-How to use:
+source: https://gist.github.com/cbednarski/8450931
+Intended use:
 To create and automatically annotate datasets. Pixelwize annotation.
-1. Run the application. It'll show two windows the scene and the mask.
+1. Run Application.
 2. Set camera steady with no moving or flickering objects on the scene.
-3. Press the "b" button. Camera will take a shot of the scene and later concidered it a background.
+3. Press"b" button. Camera will take a shot of the scene and later concidered it a background.
 4. Put an object or a few objects on the scene.( to annotate ) 
 5. Press "q" button to take object shot.
    The application wil take a shot and create two png files  with images of an object and a mask.
@@ -23,16 +16,19 @@ To create and automatically annotate datasets. Pixelwize annotation.
 8. To exit application press x button
 9. To create images of another class objects edit classNum variable and restart application.
 
+@author: Pinaxe
 """
 import cv2
 import datetime
 import copy
 import numpy as np
 
-
 classNum =250                         # Class number to assign to an object of interest
-threshold=30                          # threshold to binarize diff image
-kernel = np.ones((5,5),np.float32)/25 # blur kernel to denoise and average diff image
+threshold=40                          # threshold to binarize diff image
+kernel = np.ones((7,7),np.float32)/49 # blur kernel to denoise and average diff image
+imagFolder="Data_Zoo/camvid/train/"
+maskFolder="Data_Zoo/camvid/trainannot/"
+
 
 cap = cv2.VideoCapture(0)
 cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
@@ -42,20 +38,24 @@ _, mask = cap.read() # just to create a mask instance
 while(True):
     _, frame = cap.read()
     cv2.imshow('frame', frame)
+    cv2.absdiff(backdrop,frame,mask)
+    dst = cv2.filter2D(mask,-1,kernel) # blur denoise
+    #dst = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    dst[dst<threshold]=0               # threshold denoise
+    dst[dst>0 ]=250 #classNum
+    cv2.imshow('mask', dst)
+    dst = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
+    dst[dst>0 ]=classNum
+
     wk = cv2.waitKey(1) & 0xFF
     if wk == ord('b'):
         #backdrop=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         backdrop=frame
-    if wk == ord('q'):
-        
-        cv2.absdiff(backdrop,frame,mask)
-        dst = cv2.filter2D(mask,-1,kernel) # blur denoise
-        dst[dst<threshold]=0               # threshold denoise
-        dst[dst>0 ]=classNum
-        cv2.imshow('mask', dst)
+    if wk == ord('v'):
+     
         timestamp=datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        cv2.imwrite(timestamp+'-mask.png', dst)
-        cv2.imwrite(timestamp+'.png', frame)
+        cv2.imwrite(maskFolder+timestamp+'.png', dst)
+        cv2.imwrite(imagFolder+timestamp+'.png', frame)
     if wk == ord('x'):
         break      
 
