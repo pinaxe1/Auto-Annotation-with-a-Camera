@@ -1,8 +1,7 @@
-# Auto-Annotation-with-a-Camera
-# A tool for easy dataset creation. I mean small datasets but who knows :)
-Just take images of the objects of interest and you'll get them automatically annotated with pixelwize maps.
+# Auto-Annotation-with-a-Camera. A tool for an easy dataset creation. 
+Just take images of the objects of interest and you'll get them automatically annotated with pixelwize maps. I mean small datasets but everything in your hands :) 
 
-How to use it:
+#How to use it:
 To create and automatically annotate datasets.
 1. Run Application.
 2. Set camera steady with no moving or flickering objects on the scene.
@@ -15,3 +14,6 @@ To create and automatically annotate datasets.
 7. To create another serie of images with a different background change scene and repeat steps 3-6
 8. To exit application press x button
 9. To create images of another class objects edit classNum variable and restart application.
+
+Happy DataSetting.
+WBR Pinaxe
