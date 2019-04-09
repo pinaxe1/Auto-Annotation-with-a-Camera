@@ -1,0 +1,55 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr  4 21:34:17 2019
+source: https://gist.github.com/cbednarski/8450931
+Intended use:
+To create and automatically annotate datasets. Pixelwize annotation.
+1. Run Application.
+2. Set camera steady with no moving or flickering objects on the scene.
+3. Precc "b" button. Camera will take a shot of the scene and later concidered it a background.
+4. Put an object or a few objects on the scene.( to annotate ) 
+5. Press "q" button to take object shot.
+   The application wil take a shot and create two png files  with images of an object and a mask.
+   The mask image is a diff betveen a background and a an object images.
+6. Rrepeat steps 4 and 5 to make more shots.
+7. To create another serie of images with a different background change scene and repeat steps 3-6
+8. To exit application press x button
+9. To create images of another class objects edit classNum variable and restart application.
+
+@author: Pinaxe
+"""
+import cv2
+import datetime
+import copy
+import numpy as np
+classNum =1                           # Class number to assign to an object of interest
+threshold=30                          # threshold to binarize diff image
+kernel = np.ones((5,5),np.float32)/25 # blur kernel to denoise and average diff image
+
+cap = cv2.VideoCapture(0)
+cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
+cv2.namedWindow('mask', cv2.WINDOW_NORMAL)
+_, mask = cap.read() # just to create a mask instance
+
+while(True):
+    _, frame = cap.read()
+    cv2.imshow('frame', frame)
+    wk = cv2.waitKey(1) & 0xFF
+    if wk == ord('b'):
+        #backdrop=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        backdrop=frame
+    if wk == ord('q'):
+        
+        cv2.absdiff(backdrop,frame,mask)
+        dst = cv2.filter2D(mask,-1,kernel) # blur denoise
+        dst[dst<threshold]=0               # threshold denoise
+        dst[dst>0 ]=classNum
+        cv2.imshow('mask', dst)
+        timestamp=datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        cv2.imwrite(timestamp+'-mask.png', dst)
+        cv2.imwrite(timestamp+'.png', frame)
+    if wk == ord('x'):
+        break      
+
+cap.release()
+cv2.destroyAllWindows()           
