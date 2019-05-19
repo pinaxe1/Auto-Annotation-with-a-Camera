@@ -10,7 +10,7 @@ To create and automatically annotate datasets.
 5. Press "q" button to take a picture of the scene with objects.
    The application wil take a shot and create two png files with images of the scene and a mask.
    The mask image is a diff betveen a background and a an object images.
-6. Rrepeat steps 4 and 5 to make more shots. Watch for artifacts on the mask. If the program don't cover objects wit the mask or draws errorneous artefacts try to adjust parameters Kernel and Threshold
+6. Rrepeat steps 4 and 5 to make more shots. Watch for artifacts on the mask. If the program don't cover objects with the mask or draws errorneous artefacts try to adjust parameters Kernel and Threshold
 7. To create another serie of images with a different background change scene and repeat steps 3-6
 8. To exit application press x button
 9. To create images of another class objects edit classNum variable and restart application.
